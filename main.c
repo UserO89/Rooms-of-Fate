@@ -85,7 +85,31 @@ int main(int argc, char *argv[]) {
     }
 
     Room* worldMap = createWorldMap();
-    // In next steps: displaying rooms and interaction...
+    int gameRunning = 1;
+    while (gameRunning) {
+        displayRoom(worldMap, player.currentRoom, &player);
+        printf("\n\033[36m[1] Next Room\n");
+        printf("[2] Save Game\n");
+        printf("[3] Quit\033[0m\n");
+
+        int choice;
+        scanf("%d", &choice);
+
+    switch (choice) {
+        case 1:
+            player.currentRoom = (player.currentRoom + 1) % MAX_ROOMS;
+            break;
+        case 2:
+            saveGame(&player);
+            break;
+        case 3:
+            gameRunning = 0;
+            break;
+        default:
+            printf("Invalid option.\n");
+    }
+}
+
 }
 
 Room* createWorldMap() {
@@ -109,3 +133,22 @@ Room* createWorldMap() {
 
     return rooms;
 }
+void displayRoom(Room* rooms, int roomIndex, Player* player) {
+    Room room = rooms[roomIndex];
+    printf("\n\033[32m%s\033[0m\n", room.description);
+
+    if (room.goldAmount > 0)
+        printf("You see some gold here: \033[33m%d\033[0m coins.\n", room.goldAmount);
+    if (room.hasNPC)
+        printf("There is someone here who wants to talk to you.\n");
+    if (room.hasTrader)
+        printf("A trader offers to sell you gear.\n");
+    if (room.hasBoss)
+        printf("A terrifying boss stands before you!\n");
+
+    printf("Your stats: ❤️ %d | 💰 %d | 🗡️ %s | 🛡️ %s\n", 
+           player->health, player->gold,
+           player->hasSword ? "Yes" : "No",
+           player->hasArmor ? "Yes" : "No");
+}
+
