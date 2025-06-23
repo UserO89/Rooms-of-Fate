@@ -17,6 +17,16 @@ typedef struct {
     int hasArmor;
 } Player;
 
+typedef struct {
+    char description[180];
+    int hasRandomEvent;
+    int goldAmount;
+    int hasNPC;
+    int hasTrader;
+    int hasBoss;
+    int bossHealth;
+} Room;
+
 void saveGame(Player* player) {
     char filename[100];
     snprintf(filename, sizeof(filename), "%s.save", player->name);
@@ -74,5 +84,28 @@ int main(int argc, char *argv[]) {
         printf("Welcome, %s! Let's start a new game.\n", player.name);
     }
 
-    // Next: world generation and game loop...
+    Room* worldMap = createWorldMap();
+    // In next steps: displaying rooms and interaction...
+}
+
+Room* createWorldMap() {
+    Room* rooms = malloc(sizeof(Room) * MAX_ROOMS);
+
+    for (int i = 0; i < MAX_ROOMS; i++) {
+        snprintf(rooms[i].description, sizeof(rooms[i].description), "You are in room #%d.", i + 1);
+        rooms[i].hasRandomEvent = rand() % 2;
+        rooms[i].goldAmount = rand() % 20;
+        rooms[i].hasNPC = rand() % 2;
+        rooms[i].hasTrader = (rand() % 4 == 0);
+        rooms[i].hasBoss = 0;
+        rooms[i].bossHealth = 0;
+    }
+
+    // Last room has the boss
+    rooms[MAX_ROOMS - 1].hasBoss = 1;
+    rooms[MAX_ROOMS - 1].bossHealth = 100;
+    snprintf(rooms[MAX_ROOMS - 1].description, sizeof(rooms[MAX_ROOMS - 1].description), 
+             "This is the final room. A powerful boss awaits!");
+
+    return rooms;
 }

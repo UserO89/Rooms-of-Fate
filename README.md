@@ -23,4 +23,4 @@ In this stage, we added the following core features:
 ## 🧪 Example Launch
 
 ```bash
-./RoomsOfFate Vladislav
+./RoomsOfFate Vladyslav
